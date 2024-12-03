@@ -26,13 +26,12 @@ const LandingPage = () => {
               className="w-50 h-20"
             />
           </div>
-          <h1 className="text-4xl font-extrabold mb-4 tracking-tight">
+          <h1 className="text-3xl font-extrabold mb-4 tracking-tight">
             Selamat Datang di
-            <span className="text-teal-800"> PAMSIMAS</span>
+            <span className="text-teal-800"> PAMSIMAS Soka</span>
           </h1>
           <p className="text-lg font-light max-w-md mx-auto mb-6">
-            Platform untuk mengelola kebutuhan air bersih desa Anda dengan mudah
-            dan cepat.
+            Platform untuk mengelola kebutuhan air bersih desa Anda
           </p>
 
           {/* Button Section */}

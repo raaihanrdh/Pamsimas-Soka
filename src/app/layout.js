@@ -20,8 +20,8 @@ const inconsolata = Inconsolata({
 });
 
 export const metadata = {
-  title: "Pamsimas Lerep",
-  description: "Pamsimas Lerep",
+  title: "Pamsimas Soka",
+  description: "Pamsimas Soka",
 };
 
 export default function RootLayout({ children }) {

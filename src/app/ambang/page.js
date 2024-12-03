@@ -184,13 +184,13 @@ const AmbangPage = () => {
                           } hover:bg-gray-200`}
                         >
                           <td className="px-6 py-4 text-center border-b border-gray-300">
-                            Nominal Minimal
+                            Harga Per Meter Kubik (Dibawah Minimum)
                           </td>
                           <td className="px-6 py-4 text-center border-b border-gray-300">
-                            {row.nominalMinimum.meteranUsaha}
+                            {row.hargaPerKubikMinimum.meteranUsaha}
                           </td>
                           <td className="px-6 py-4 text-center border-b border-gray-300">
-                            {row.nominalMinimum.meteranPribadi}
+                            {row.hargaPerKubikMinimum.meteranPribadi}
                           </td>
                           {user.permissions.ambang.update === 1 && (
                             <td className="px-6 py-4 text-center border-b border-gray-300">
@@ -209,13 +209,13 @@ const AmbangPage = () => {
                           } hover:bg-gray-200`}
                         >
                           <td className="px-6 py-4 text-center border-b border-gray-300">
-                            Harga Per Kubik
+                            Harga Per Meter Kubik (Diatas Minimum)
                           </td>
                           <td className="px-6 py-4 text-center border-b border-gray-300">
-                            {row.hargaPerKubik.meteranUsaha}
+                            {row.hargaPerKubikMaksimum.meteranUsaha}
                           </td>
                           <td className="px-6 py-4 text-center border-b border-gray-300">
-                            {row.hargaPerKubik.meteranPribadi}
+                            {row.hargaPerKubikMaksimum.meteranPribadi}
                           </td>
                           {user.permissions.ambang.update === 1 && (
                             <td className="px-6 py-4 text-center border-b border-gray-300">

@@ -12,10 +12,10 @@ export default function EditAmbangModal({
   const [formData, setFormData] = useState({
     ambangMinimumUsaha: editData.ambangMinimum.meteranUsaha,
     ambangMinimumPribadi: editData.ambangMinimum.meteranPribadi,
-    nominalMinimumUsaha: editData.nominalMinimum.meteranUsaha,
-    nominalMinimumPribadi: editData.nominalMinimum.meteranPribadi,
-    hargaPerKubikUsaha: editData.hargaPerKubik.meteranUsaha,
-    hargaPerKubikPribadi: editData.hargaPerKubik.meteranPribadi,
+    hargaPerKubikMinimumUsaha: editData.hargaPerKubikMinimum.meteranUsaha,
+    hargaPerKubikMinimumPribadi: editData.hargaPerKubikMinimum.meteranPribadi,
+    hargaPerKubikMaksimumUsaha: editData.hargaPerKubikMaksimum.meteranUsaha,
+    hargaPerKubikMaksimumPribadi: editData.hargaPerKubikMaksimum.meteranPribadi,
     biayaAdminUsaha: editData.biayaAdmin.meteranUsaha,
     biayaAdminPribadi: editData.biayaAdmin.meteranPribadi,
   });
@@ -49,13 +49,13 @@ export default function EditAmbangModal({
         meteranUsaha: formData.ambangMinimumUsaha,
         meteranPribadi: formData.ambangMinimumPribadi,
       },
-      nominalMinimum: {
-        meteranUsaha: formData.nominalMinimumUsaha,
-        meteranPribadi: formData.nominalMinimumPribadi,
+      hargaPerKubikMinimum: {
+        meteranUsaha: formData.hargaPerKubikMinimumUsaha,
+        meteranPribadi: formData.hargaPerKubikMinimumPribadi,
       },
-      hargaPerKubik: {
-        meteranUsaha: formData.hargaPerKubikUsaha,
-        meteranPribadi: formData.hargaPerKubikPribadi,
+      hargaPerKubikMaksimum: {
+        meteranUsaha: formData.hargaPerKubikMaksimumUsaha,
+        meteranPribadi: formData.hargaPerKubikMaksimumPribadi,
       },
       biayaAdmin: {
         meteranUsaha: formData.biayaAdminUsaha,
@@ -158,24 +158,24 @@ export default function EditAmbangModal({
           <div className="grid grid-cols-2 gap-4">
             <div>
               <label className="block mb-1 text-sm">
-                Nominal Minimum Usaha
+                Harga Per Kubik Minimum Usaha
               </label>
               <input
                 type="number"
-                name="nominalMinimumUsaha"
-                value={formData.nominalMinimumUsaha}
+                name="hargaPerKubikMinimumUsaha"
+                value={formData.hargaPerKubikMinimumUsaha}
                 onChange={handleChange}
                 className="w-full p-2 border border-gray-300 rounded text-sm"
               />
             </div>
             <div>
               <label className="block mb-1 text-sm">
-                Nominal Minimum Pribadi
+                Harga Per Kubik Minimum Pribadi
               </label>
               <input
                 type="number"
-                name="nominalMinimumPribadi"
-                value={formData.nominalMinimumPribadi}
+                name="hargaPerKubikMinimumPribadi"
+                value={formData.hargaPerKubikMinimumPribadi}
                 onChange={handleChange}
                 className="w-full p-2 border border-gray-300 rounded text-sm"
               />
@@ -186,24 +186,24 @@ export default function EditAmbangModal({
           <div className="grid grid-cols-2 gap-4">
             <div>
               <label className="block mb-1 text-sm">
-                Harga Per Kubik Usaha
+                Harga Per Kubik Maksimum Usaha
               </label>
               <input
                 type="number"
-                name="hargaPerKubikUsaha"
-                value={formData.hargaPerKubikUsaha}
+                name="hargaPerKubikMaksimumUsaha"
+                value={formData.hargaPerKubikMaksimumUsaha}
                 onChange={handleChange}
                 className="w-full p-2 border border-gray-300 rounded text-sm"
               />
             </div>
             <div>
               <label className="block mb-1 text-sm">
-                Harga Per Kubik Pribadi
+                Harga Per Kubik Maksimum Pribadi
               </label>
               <input
                 type="number"
-                name="hargaPerKubikPribadi"
-                value={formData.hargaPerKubikPribadi}
+                name="hargaPerKubikMaksimumPribadi"
+                value={formData.hargaPerKubikMaksimumPribadi}
                 onChange={handleChange}
                 className="w-full p-2 border border-gray-300 rounded text-sm"
               />

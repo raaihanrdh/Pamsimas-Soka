@@ -1,282 +1,126 @@
-import React, { useState } from "react";
-import { FiX } from "react-icons/fi";
-import { API_URL } from "@/app/common/api";
-import Toast from "../Toast/successToast";
+import { useState } from "react";
 
-export default function EditAmbangModal({
-  editData,
-  setModalOpen,
-  setData,
-  fetchData, // Add a prop to fetch fresh data after update
-}) {
-  const [formData, setFormData] = useState({
-    ambangMinimumUsaha: editData.ambangMinimum.meteranUsaha,
-    ambangMinimumPribadi: editData.ambangMinimum.meteranPribadi,
-    hargaPerKubikMinimumUsaha: editData.hargaPerKubikMinimum.meteranUsaha,
-    hargaPerKubikMinimumPribadi: editData.hargaPerKubikMinimum.meteranPribadi,
-    hargaPerKubikMaksimumUsaha: editData.hargaPerKubikMaksimum.meteranUsaha,
-    hargaPerKubikMaksimumPribadi: editData.hargaPerKubikMaksimum.meteranPribadi,
-    biayaAdminUsaha: editData.biayaAdmin.meteranUsaha,
-    biayaAdminPribadi: editData.biayaAdmin.meteranPribadi,
-  });
+export default function EditModal({ closeModal, saveData, data, rw }) {
+  const [formData, setFormData] = useState(data); // Menyimpan data awal ke state
 
-  const [updateAllDusun, setUpdateAllDusun] = useState(false); // Manage the checkbox state
-  const [showToast, setShowToast] = useState(false);
-  const [toastType, setToastType] = useState("");
-  const [responseMessage, setResponseMessage] = useState("");
-  const [isLoading, setIsLoading] = useState(false);
-
-  // Handle form field changes
+  // Fungsi untuk menangani perubahan input
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormData((prevData) => ({
-      ...prevData,
-      [name]: value,
+    setFormData((prev) => ({
+      ...prev,
+      [name]: value, // Update state sesuai nama input
     }));
   };
 
-  // Handle checkbox change to toggle updating all dusun
-  const handleCheckboxChange = (e) => {
-    setUpdateAllDusun(e.target.checked);
-  };
-
-  // Save the data when form is submitted
-  const handleSave = async () => {
-    if (isLoading) return;
-
+  const handleSave = () => {
     const updatedData = {
-      ambangMinimum: {
-        meteranUsaha: formData.ambangMinimumUsaha,
-        meteranPribadi: formData.ambangMinimumPribadi,
-      },
-      hargaPerKubikMinimum: {
-        meteranUsaha: formData.hargaPerKubikMinimumUsaha,
-        meteranPribadi: formData.hargaPerKubikMinimumPribadi,
-      },
-      hargaPerKubikMaksimum: {
-        meteranUsaha: formData.hargaPerKubikMaksimumUsaha,
-        meteranPribadi: formData.hargaPerKubikMaksimumPribadi,
-      },
-      biayaAdmin: {
-        meteranUsaha: formData.biayaAdminUsaha,
-        meteranPribadi: formData.biayaAdminPribadi,
-      },
+      idMeteran: formData.idMeteran,
+      namaKepalaRumah: formData.namaKepalaRumah,
+      jenisMeteran: formData.jenisMeteran,
+      statusMeteran: formData.statusMeteran,
+      // Tambahkan data lainnya yang relevan
     };
-
-    setIsLoading(true);
-
-    try {
-      const endpoint = updateAllDusun
-        ? `${API_URL}/ambang` // Endpoint for updating all dusun
-        : `${API_URL}/ambang/${editData.dusunRTRW}`;
-
-      const response = await fetch(endpoint, {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(updatedData),
-      });
-
-      const result = await response.json();
-
-      if (response.ok) {
-        // Success handling for specific or all dusun update
-        if (!updateAllDusun && result.data.modifiedCount > 0) {
-          setToastType("success");
-          setResponseMessage(result.message || "Update Data Dusun Berhasil.");
-        } else if (updateAllDusun) {
-          setToastType("success");
-          setResponseMessage("Update Data Untuk Semua Dusun Berhasil.");
-        } else {
-          setToastType("error");
-          setResponseMessage(result.message || "Update gagal.");
-        }
-
-        // Optionally refresh data after successful update
-        if (fetchData) {
-          fetchData();
-        }
-      } else {
-        setToastType("error");
-        setResponseMessage(
-          result.message || "Terjadi kesalahan saat memperbarui data."
-        );
-      }
-    } catch (error) {
-      console.error("Error updating ambang data:", error.message);
-      setToastType("error");
-      setResponseMessage("Terjadi kesalahan saat memperbarui data.");
-    } finally {
-      setIsLoading(false);
-      setShowToast(true);
-      setTimeout(() => setShowToast(false), 3000);
-    }
+    saveData(updatedData); // Kirim data ke parent untuk disimpan
+    closeModal(); // Tutup modal setelah data berhasil disimpan
   };
 
   return (
-    <div className="fixed inset-0 bg-gray-600 bg-opacity-50 flex justify-center items-center z-50 p-4">
-      <div className="bg-white p-6 rounded-lg w-full max-w-md mx-auto">
-        <div className="flex justify-between items-center mb-4">
-          <h3 className="text-xl font-semibold">Edit Data Ambang</h3>
-          <button
-            onClick={() => setModalOpen(false)}
-            className="text-gray-500 hover:text-gray-700"
-          >
-            <FiX size={24} />
-          </button>
-        </div>
-
-        <div className="space-y-4">
-          {/* Ambang Minimum Section */}
-          <div className="grid grid-cols-2 gap-4">
-            <div>
-              <label className="block mb-1 text-sm">Ambang Minimum Usaha</label>
-              <input
-                type="number"
-                name="ambangMinimumUsaha"
-                value={formData.ambangMinimumUsaha}
-                onChange={handleChange}
-                className="w-full p-2 border border-gray-300 rounded text-sm"
-              />
-            </div>
-            <div>
-              <label className="block mb-1 text-sm">
-                Ambang Minimum Pribadi
-              </label>
-              <input
-                type="number"
-                name="ambangMinimumPribadi"
-                value={formData.ambangMinimumPribadi}
-                onChange={handleChange}
-                className="w-full p-2 border border-gray-300 rounded text-sm"
-              />
-            </div>
-          </div>
-
-          {/* Nominal Minimum Section */}
-          <div className="grid grid-cols-2 gap-4">
-            <div>
-              <label className="block mb-1 text-sm">
-                Harga Per Kubik Minimum Usaha
-              </label>
-              <input
-                type="number"
-                name="hargaPerKubikMinimumUsaha"
-                value={formData.hargaPerKubikMinimumUsaha}
-                onChange={handleChange}
-                className="w-full p-2 border border-gray-300 rounded text-sm"
-              />
-            </div>
-            <div>
-              <label className="block mb-1 text-sm">
-                Harga Per Kubik Minimum Pribadi
-              </label>
-              <input
-                type="number"
-                name="hargaPerKubikMinimumPribadi"
-                value={formData.hargaPerKubikMinimumPribadi}
-                onChange={handleChange}
-                className="w-full p-2 border border-gray-300 rounded text-sm"
-              />
-            </div>
-          </div>
-
-          {/* Harga Per Kubik Section */}
-          <div className="grid grid-cols-2 gap-4">
-            <div>
-              <label className="block mb-1 text-sm">
-                Harga Per Kubik Maksimum Usaha
-              </label>
-              <input
-                type="number"
-                name="hargaPerKubikMaksimumUsaha"
-                value={formData.hargaPerKubikMaksimumUsaha}
-                onChange={handleChange}
-                className="w-full p-2 border border-gray-300 rounded text-sm"
-              />
-            </div>
-            <div>
-              <label className="block mb-1 text-sm">
-                Harga Per Kubik Maksimum Pribadi
-              </label>
-              <input
-                type="number"
-                name="hargaPerKubikMaksimumPribadi"
-                value={formData.hargaPerKubikMaksimumPribadi}
-                onChange={handleChange}
-                className="w-full p-2 border border-gray-300 rounded text-sm"
-              />
-            </div>
-          </div>
-
-          {/* Biaya Admin Section */}
-          <div className="grid grid-cols-2 gap-4">
-            <div>
-              <label className="block mb-1 text-sm">Biaya Admin Usaha</label>
-              <input
-                type="number"
-                name="biayaAdminUsaha"
-                value={formData.biayaAdminUsaha}
-                onChange={handleChange}
-                className="w-full p-2 border border-gray-300 rounded text-sm"
-              />
-            </div>
-            <div>
-              <label className="block mb-1 text-sm">Biaya Admin Pribadi</label>
-              <input
-                type="number"
-                name="biayaAdminPribadi"
-                value={formData.biayaAdminPribadi}
-                onChange={handleChange}
-                className="w-full p-2 border border-gray-300 rounded text-sm"
-              />
-            </div>
-          </div>
-
-          {/* Update All Dusun Checkbox */}
-          <div className="flex items-center mt-4">
-            <label className="inline-flex items-center">
-              <input
-                type="checkbox"
-                checked={updateAllDusun}
-                onChange={handleCheckboxChange}
-                className="form-checkbox"
-              />
-              <span className="ml-2">Update Semua Dusun</span>
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-40 backdrop-blur-sm">
+      <div className="relative w-full max-w-lg p-8 bg-white rounded-xl shadow-lg">
+        <h2 className="text-2xl font-semibold text-gray-800 mb-6">
+          Edit Pelanggan
+        </h2>
+        <form className="space-y-5">
+          {/* Input Nama Kepala Rumah */}
+          <div>
+            <label className="block text-sm font-medium text-gray-600">
+              Nama Kepala Rumah
             </label>
+            <input
+              type="text"
+              name="namaKepalaRumah"
+              value={formData.namaKepalaRumah}
+              onChange={handleChange}
+              className="mt-2 w-full px-4 py-3 border border-gray-300 rounded-lg text-gray-800 focus:outline-none focus:ring-2 focus:ring-indigo-400 focus:border-transparent"
+              placeholder="Masukkan nama kepala rumah"
+            />
           </div>
-        </div>
 
-        <div className="flex justify-end space-x-3 mt-6">
-          <button
-            onClick={() => setModalOpen(false)}
-            className="py-2 px-4 bg-gray-300 text-gray-700 rounded hover:bg-gray-400 text-sm"
-          >
-            Batal
-          </button>
-          <button
-            onClick={handleSave}
-            disabled={isLoading}
-            className={`py-2 px-4 rounded text-sm ${
-              isLoading
-                ? "bg-teal-300 cursor-not-allowed"
-                : "bg-teal-600 hover:bg-teal-700 text-white"
-            }`}
-          >
-            {isLoading ? "Menyimpan..." : "Simpan"}
-          </button>
-        </div>
+          {/* Alamat Rumah */}
+          <div>
+            <label className="block text-sm font-medium text-gray-600">
+              Alamat Rumah
+            </label>
+            <select
+              name="alamatRumah"
+              value={formData.alamatRumah}
+              onChange={handleChange}
+              className="mt-2 w-full px-4 py-3 border border-gray-300 rounded-lg text-gray-800 bg-white focus:outline-none focus:ring-2 focus:ring-indigo-400 focus:border-transparent"
+            >
+              <option>Pilih Alamat Rumah</option>
+              {rw &&
+                rw.map((rw) => {
+                  return (
+                    <option key={rw._id} value={rw._id}>
+                      {rw._id}
+                    </option>
+                  );
+                })}
+            </select>
+          </div>
+          {/* Jenis Meteran */}
+          <div>
+            <label className="block text-sm font-medium text-gray-600">
+              Jenis Meteran
+            </label>
+            <select
+              name="jenisMeteran"
+              value={formData.jenisMeteran}
+              onChange={handleChange}
+              className="mt-2 w-full px-4 py-3 border border-gray-300 rounded-lg text-gray-800 bg-white focus:outline-none focus:ring-2 focus:ring-indigo-400 focus:border-transparent"
+            >
+              <option key="Pribadi" value="Pribadi">
+                Pribadi
+              </option>
+              <option key="Usaha" value="Usaha">
+                Usaha
+              </option>
+            </select>
+          </div>
+          {/* Input Status Meteran */}
+          <div>
+            <label className="block text-sm font-medium text-gray-600">
+              Status Meteran
+            </label>
+            <select
+              name="statusMeteran"
+              value={formData.statusMeteran}
+              onChange={handleChange}
+              className="mt-2 w-full px-4 py-3 border border-gray-300 rounded-lg text-gray-800 bg-white focus:outline-none focus:ring-2 focus:ring-indigo-400 focus:border-transparent"
+            >
+              <option value="Aktif">Aktif</option>
+              <option value="Tidak Aktif">Tidak Aktif</option>
+            </select>
+          </div>
+
+          {/* Tombol Tutup dan Simpan */}
+          <div className="mt-6 flex justify-end space-x-3">
+            <button
+              onClick={closeModal}
+              className="px-4 py-2 text-sm font-medium text-gray-700 bg-gray-200 rounded-lg hover:bg-gray-300 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-400"
+            >
+              Tutup
+            </button>
+            <button
+              type="button"
+              onClick={handleSave}
+              className="px-4 py-2 text-sm font-medium text-white bg-indigo-600 rounded-lg shadow-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+            >
+              Simpan
+            </button>
+          </div>
+        </form>
       </div>
-
-      {showToast && (
-        <Toast
-          type={toastType}
-          message={responseMessage}
-          isOpen={showToast}
-          onClose={() => setShowToast(false)}
-        />
-      )}
     </div>
   );
 }
