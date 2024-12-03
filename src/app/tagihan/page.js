@@ -436,31 +436,49 @@ const TagihanBulanan = () => {
       // Logic penentuan harga
       if (jenisMeteranSelected) {
         if (jenisMeteranSelected == "Pribadi") {
+          biayaAdmin = dataAmbang.biayaAdmin.meteranPribadi;
           if (meteranHitungan <= dataAmbang.ambangMinimum.meteranPribadi) {
             factorTotalTagihan = dataAmbang.hargaPerKubikMinimum.meteranPribadi;
+            totalTagihan = meteranHitungan * factorTotalTagihan + biayaAdmin;
           } else {
             factorTotalTagihan =
               dataAmbang.hargaPerKubikMaksimum.meteranPribadi;
+            totalTagihan =
+              dataAmbang.ambangMinimum.meteranPribadi *
+                dataAmbang.hargaPerKubikMinimum.meteranPribadi +
+              (meteranHitungan - dataAmbang.ambangMinimum.meteranPribadi) *
+                factorTotalTagihan +
+              biayaAdmin;
           }
-          biayaAdmin = dataAmbang.biayaAdmin.meteranPribadi;
         } else {
+          biayaAdmin = dataAmbang.biayaAdmin.meteranUsaha;
           if (meteranHitungan <= dataAmbang.ambangMinimum.meteranUsaha) {
             factorTotalTagihan = dataAmbang.hargaPerKubikMinimum.meteranUsaha;
+            totalTagihan = meteranHitungan * factorTotalTagihan + biayaAdmin;
           } else {
             factorTotalTagihan = dataAmbang.hargaPerKubikMaksimum.meteranUsaha;
+            totalTagihan =
+              dataAmbang.ambangMinimum.meteranUsaha *
+                dataAmbang.hargaPerKubikMinimum.meteranUsaha +
+              (meteranHitungan - dataAmbang.ambangMinimum.meteranUsaha) *
+                factorTotalTagihan +
+              biayaAdmin;
           }
-          biayaAdmin = dataAmbang.biayaAdmin.meteranUsaha;
         }
       } else {
+        biayaAdmin = dataAmbang.biayaAdmin.meteranPribadi;
         if (meteranHitungan <= dataAmbang.ambangMinimum.meteranPribadi) {
           factorTotalTagihan = dataAmbang.hargaPerKubikMinimum.meteranPribadi;
+          totalTagihan = meteranHitungan * factorTotalTagihan + biayaAdmin;
         } else {
           factorTotalTagihan = dataAmbang.hargaPerKubikMaksimum.meteranPribadi;
+          totalTagihan =
+            dataAmbang.ambangMinimum.meteranPribadi *
+              dataAmbang.hargaPerKubikMinimum.meteranPribadi +
+            meteranHitungan * factorTotalTagihan +
+            biayaAdmin;
         }
-        biayaAdmin = dataAmbang.biayaAdmin.meteranPribadi;
       }
-
-      totalTagihan = meteranHitungan * factorTotalTagihan + biayaAdmin;
 
       updatedTagihan.totalTagihan = totalTagihan;
     }
@@ -470,7 +488,6 @@ const TagihanBulanan = () => {
 
     setEditingTagihan(updatedTagihan);
   };
-
   const openScanModal = () => {
     setShowScanner(true);
   };
